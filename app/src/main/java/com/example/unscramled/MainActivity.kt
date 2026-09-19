@@ -16,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import com.example.unscramled.ui.theme.UnscramledTheme
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +36,11 @@ fun GameScreen() {
 
     var userAnswer by remember{
         mutableStateOf("")
+    }
+
+    val correctAnswer = "CAT"
+    var score by remember {
+        mutableStateOf(0)
     }
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -55,7 +62,7 @@ fun GameScreen() {
         )
 
         OutlinedTextField(
-            value = "userAnswer",
+            value = userAnswer,
             onValueChange = {
                 userAnswer = it
             },
@@ -65,12 +72,16 @@ fun GameScreen() {
         )
 
         Button(
-            onClick = { }
+            onClick = {
+                if (userAnswer == correctAnswer){
+                    score++
+                }
+            }
         ) {
             Text("SUBMIT")
         }
         Text(
-            text = "Score: 0"
+            text = "Score: $score"
         )
     }
 }
