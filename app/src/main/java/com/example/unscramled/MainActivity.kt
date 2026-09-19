@@ -10,10 +10,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import com.example.unscramled.ui.theme.UnscramledTheme
+import androidx.compose.runtime.remember
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +31,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun GameScreen() {
+
+    var userAnswer by remember{
+        mutableStateOf("")
+    }
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -40,7 +46,7 @@ fun GameScreen() {
         )
 
         Text(
-            text = "CAT",
+            text = "TAC",
             fontSize = 40.sp
         )
 
@@ -49,8 +55,10 @@ fun GameScreen() {
         )
 
         OutlinedTextField(
-            value = "",
-            onValueChange = { },
+            value = "userAnswer",
+            onValueChange = {
+                userAnswer = it
+            },
             label = {
                 Text("Enter your Answer")
             }
