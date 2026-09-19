@@ -10,61 +10,74 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import com.example.unscramled.ui.theme.UnscramledTheme
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
             UnscramledTheme {
                 GameScreen()
-                }
             }
         }
     }
+}
 
 @Composable
 fun GameScreen() {
 
-    var userAnswer by remember{
+    var userAnswer by remember {
         mutableStateOf("")
     }
 
-    val words = listOf(
+    val words: List<String> = listOf(
         "CAT",
         "DOG",
         "BOOK"
     )
 
     var currentWordIndex by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
-    val correctAnswer = words[currentWordIndex]
 
+    // Correct answer
+    val correctAnswer: String = words[currentWordIndex]
+
+    // Scrambled word
+    var scrambledWord by remember {
+        mutableStateOf(
+            words[0].toList().shuffled().joinToString("")
+        )
+    }
+
+    // Score
     var score by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
-    ){
+    ) {
+
         Text(
             text = "UNSCRAMBLE",
             fontSize = 30.sp
         )
 
         Text(
-            text = correctAnswer,
+            text = scrambledWord,
             fontSize = 40.sp
         )
 
@@ -84,18 +97,27 @@ fun GameScreen() {
 
         Button(
             onClick = {
-                if (userAnswer == correctAnswer){
+
+                if (userAnswer.uppercase() == correctAnswer) {
+
+
                     score++
 
-                    if (currentWordIndex < words.size - 1){
+                    if (currentWordIndex < words.size - 1) {
+
                         currentWordIndex++
                         userAnswer = ""
+                        scrambledWord = words[currentWordIndex]
+                            .toList()
+                            .shuffled()
+                            .joinToString("")
                     }
                 }
             }
         ) {
             Text("SUBMIT")
         }
+
         Text(
             text = "Score: $score"
         )
