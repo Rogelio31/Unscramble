@@ -10,10 +10,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
@@ -38,12 +36,7 @@ fun GameScreen() {
 
     val viewModel: GameViewModel = viewModel()
 
-    var userAnswer by remember {
-        mutableStateOf("")
-    }
-
-    val correctAnswer =
-        viewModel.words[viewModel.currentWordIndex]
+    val uiState by viewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -57,7 +50,7 @@ fun GameScreen() {
         )
 
         Text(
-            text = viewModel.words[viewModel.currentWordIndex],
+            text = uiState.scrambledWord,
             fontSize = 40.sp
         )
 
@@ -66,36 +59,21 @@ fun GameScreen() {
         )
 
         OutlinedTextField(
-            value = userAnswer,
-            onValueChange = {
-                userAnswer = it
-            },
+            value = uiState.userAnswer,
+            onValueChange = {},
             label = {
                 Text("Enter your answer")
             }
         )
 
         Button(
-            onClick = {
-
-                if (userAnswer == correctAnswer) {
-                    viewModel.score++
-
-                    if (
-                        viewModel.currentWordIndex
-                        < viewModel.words.size - 1
-                    ) {
-                        viewModel.currentWordIndex++
-                        userAnswer = ""
-                    }
-                }
-            }
+            onClick = {}
         ) {
             Text("SUBMIT")
         }
 
         Text(
-            text = "Score: ${viewModel.score}"
+            text = "Score: ${uiState.score}"
         )
     }
 }
